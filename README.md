@@ -9,6 +9,8 @@ Private technical notes for Hack The Box Season 11 machines solved by Kossi Rich
 | Machine | OS | Difficulty | Status | Writeup |
 | --- | --- | --- | --- | --- |
 | Reactor | Linux | Medium/Hard | Active — private only | [Read](Reactor/README.md) |
+| DevHub | Linux | Medium | Active — private only | [Read](DevHub/README.md) |
+| Connected | Linux | Easy | Active — private only | [Read](Connected/README.md) |
 
 ## Publication policy
 
@@ -16,4 +18,3 @@ Private technical notes for Hack The Box Season 11 machines solved by Kossi Rich
 - Recheck retirement status before publishing any writeup.
 - Redact flags and environment-specific addresses when appropriate.
 - Publish only in accordance with Hack The Box rules.
-
