@@ -11,6 +11,7 @@ Private technical notes for Hack The Box Season 11 machines solved by Kossi Rich
 | Reactor | Linux | Medium/Hard | Active — private only | [Read](Reactor/README.md) |
 | DevHub | Linux | Medium | Active — private only | [Read](DevHub/README.md) |
 | Connected | Linux | Easy | Active — private only | [Read](Connected/README.md) |
+| Checkpoint | Windows | — | Active — private only | [Read](Checkpoint/README.md) |
 
 ## Publication policy
 
