@@ -15,6 +15,10 @@
 | Initial access | FreePBX CVE-2025-57819 |
 | Privilege escalation | Incron and writable DAHDI configuration |
 
+## Summary
+
+Connected combines an unauthenticated FreePBX SQL injection with an unsafe root-owned automation chain. The web flaw provides command execution as `asterisk`; writable DAHDI configuration and an Incron trigger then cross the privilege boundary to root.
+
 ## 1. Reconnaissance
 
 Start with a basic scan:
@@ -273,7 +277,7 @@ Root-owned incrond monitors an asterisk-writable trigger
 Injected command executes as root
 ```
 
-## Key takeaways
+## Lessons learned
 
 The initial foothold came from a modern FreePBX vulnerability, but the privilege escalation relied on a classic trust-boundary failure:
 
@@ -301,4 +305,11 @@ chown root:root /etc/dahdi/init.conf
 chmod 644 /etc/dahdi/init.conf
 chown root:root /var/spool/asterisk/sysadmin/dahdi_restart
 chmod 600 /var/spool/asterisk/sysadmin/dahdi_restart
+```
+
+## Flags
+
+```text
+user.txt: e18b7acfe9395729d02b441d2e151add
+root.txt: b35195b1899ee2228a18da3b4a75ddee
 ```
