@@ -1,64 +1,37 @@
-# Hack The Box - Checkpoint (Season 11)
+# Hack The Box — Checkpoint Writeup
 
-> Windows • Active Directory • BadSuccessor • Kerberos • Memory Forensics • Volatility 3
+> **Active-machine material — private only. Do not publish until Checkpoint has retired.**
 
----
+## Machine information
 
-# Summary
+| Field | Value |
+| --- | --- |
+| Machine | Checkpoint |
+| Platform | Hack The Box |
+| Season | 11 |
+| OS | Windows Server 2025 |
+| Difficulty | Not specified |
+| Category | Active Directory / Kerberos / memory forensics |
+| Initial access | Restored Active Directory object and writable deployment share |
+| Privilege escalation | BadSuccessor dMSA abuse, memory forensics, and Pass-the-Hash |
+
+## Summary
 
 Checkpoint is a Windows Active Directory machine from Hack The Box Season 11 that focuses on modern Windows Server 2025 attack paths.
 
 The compromise chain combines:
 
-* Active Directory object recovery
-* ACL abuse
-* VS Code extension weaponization
-* Delegated Managed Service Account (dMSA) abuse
-* Kerberos ticket manipulation
-* VMware memory forensics
-* Pass-The-Hash authentication
+- Active Directory object recovery
+- ACL abuse
+- VS Code extension weaponization
+- Delegated Managed Service Account (dMSA) abuse
+- Kerberos ticket manipulation
+- VMware memory forensics
+- Pass-The-Hash authentication
 
 Unlike many AD machines, the path does **not rely on password cracking**. Each pivot comes from understanding permissions, trust relationships and authentication mechanisms already present in the environment.
 
----
-
-# Attack Chain
-
-```mermaid
-graph TD
-
-A[alex.turner] --> B[Restore Deleted User]
-B --> C[mark.davies]
-
-C --> D[Writable DevDrop Share]
-D --> E[Malicious VSIX Extension]
-
-E --> F[Ryan Brooks Shell]
-
-F --> G[BadSuccessor / dMSA Abuse]
-
-G --> H[Previous Key Extraction]
-
-H --> I[svc_deploy NT Hash]
-
-I --> J[VMBackups Access]
-
-J --> K[Download VMware Snapshot]
-
-K --> L[Volatility Hashdump]
-
-L --> M[Administrator NTLM]
-
-M --> N[Pass-The-Hash]
-
-N --> O[Domain Controller]
-
-O --> P[root.txt]
-```
-
----
-
-# Initial Access
+## 1. Initial access
 
 Valid credentials were available:
 
@@ -86,9 +59,7 @@ VMBackups    NO ACCESS
 
 No immediate privilege escalation path was visible through SMB.
 
----
-
-# Active Directory Enumeration
+## 2. Active Directory enumeration
 
 LDAP enumeration revealed a deleted user object.
 
@@ -100,9 +71,7 @@ mark.davies
 
 Because AD Recycle Bin was enabled, the object could be restored.
 
----
-
-# Restoring Mark Davies
+## 3. Restoring Mark Davies
 
 Restore the deleted account:
 
@@ -120,9 +89,7 @@ After restoration, authentication succeeded using:
 mark.davies:Checkpoint2024!
 ```
 
----
-
-# Writable DevDrop Share
+## 4. Writable DevDrop share
 
 Enumerating SMB shares again:
 
@@ -147,9 +114,7 @@ VS Code extensions share for approved .vsix packages
 
 This indicates that Visual Studio Code extensions are consumed from this location.
 
----
-
-# VSIX Supply Chain Attack
+## 5. VSIX supply-chain attack
 
 The share stores Visual Studio Code extensions.
 
@@ -186,9 +151,7 @@ checkpoint\ryan.brooks
 
 A shell was obtained as Ryan Brooks.
 
----
-
-# Ryan Brooks Enumeration
+## 6. Ryan Brooks enumeration
 
 Ryan was not a local administrator.
 
@@ -204,9 +167,7 @@ The machine runs Windows Server 2025, introducing a newer Active Directory attac
 Delegated Managed Service Accounts (dMSA)
 ```
 
----
-
-# Understanding BadSuccessor
+## 7. Understanding BadSuccessor
 
 Windows Server 2025 introduced Delegated Managed Service Accounts (dMSA).
 
@@ -224,9 +185,7 @@ If an attacker can create and modify dMSA objects in a vulnerable Organizational
 
 No password cracking is required.
 
----
-
-# Weaponizing a dMSA
+## 8. Weaponizing a dMSA
 
 Create a malicious dMSA:
 
@@ -269,9 +228,7 @@ The dMSA now claims to be the successor of:
 svc_deploy
 ```
 
----
-
-# Exporting Ryan's TGT
+## 9. Exporting Ryan's TGT
 
 Export Ryan's Kerberos TGT:
 
@@ -296,9 +253,7 @@ sudo timedatectl set-ntp false
 sudo ntpdate -u 10.129.X.X
 ```
 
----
-
-# Extracting Previous Keys
+## 10. Extracting previous keys
 
 Request a dMSA ticket:
 
@@ -329,9 +284,7 @@ svc_deploy
 
 This is the critical objective of the BadSuccessor attack.
 
----
-
-# Accessing VMBackups
+## 11. Accessing VMBackups
 
 Authenticate using Pass-The-Hash:
 
@@ -364,9 +317,7 @@ reget "Windows Server 2019-Snapshot1.vmem"
 reget "Windows Server 2019-Snapshot1.vmsn"
 ```
 
----
-
-# VMware Memory Forensics
+## 12. VMware memory forensics
 
 Identify the operating system:
 
@@ -394,17 +345,13 @@ Administrator
 f29e9c014295b9b32139b09a2790be3b
 ```
 
----
-
-# Credential Reuse
+## 13. Credential reuse
 
 The local Administrator hash recovered from the VMware snapshot was also valid on the Domain Controller.
 
 This represents a classic credential reuse scenario.
 
----
-
-# Pass-The-Hash
+## 14. Pass-the-Hash
 
 Authenticate as Administrator:
 
@@ -420,9 +367,7 @@ Successful shell:
 C:\>
 ```
 
----
-
-# Root Flag
+## 15. Root flag
 
 Enumerate users:
 
@@ -455,29 +400,71 @@ Output:
 ```text
 488e049c7777b08ea40703b427d933bf
 ```
----
 
-# Lessons Learned
+## Attack chain summary
+
+```mermaid
+graph TD
+
+A[alex.turner] --> B[Restore Deleted User]
+B --> C[mark.davies]
+
+C --> D[Writable DevDrop Share]
+D --> E[Malicious VSIX Extension]
+
+E --> F[Ryan Brooks Shell]
+
+F --> G[BadSuccessor / dMSA Abuse]
+
+G --> H[Previous Key Extraction]
+
+H --> I[svc_deploy NT Hash]
+
+I --> J[VMBackups Access]
+
+J --> K[Download VMware Snapshot]
+
+K --> L[Volatility Hashdump]
+
+L --> M[Administrator NTLM]
+
+M --> N[Pass-The-Hash]
+
+N --> O[Domain Controller]
+
+O --> P[root.txt]
+```
+
+## Lessons learned
 
 Checkpoint demonstrates that modern Active Directory attacks increasingly depend on:
 
-* ACL analysis
-* Understanding Kerberos internals
-* Identity relationships
-* Delegation mechanisms
-* Active Directory object lifecycle
-* Memory forensics
-* Credential reuse
+- ACL analysis
+- Understanding Kerberos internals
+- Identity relationships
+- Delegation mechanisms
+- Active Directory object lifecycle
+- Memory forensics
+- Credential reuse
 
 No passwords needed to be cracked during the compromise chain.
 
 Every pivot was achieved by abusing permissions, trust relationships and authentication mechanisms already present in the environment.
 
----
+## Remediation
 
-# Troubleshooting
+- Apply least privilege to Active Directory ACLs and delegated administration.
+- Restrict who can restore deleted directory objects and audit object recovery events.
+- Prevent untrusted users from writing to software deployment shares.
+- Require signed and approved VS Code extensions in managed environments.
+- Monitor dMSA creation, delegation changes, and Kerberos key retrieval.
+- Protect virtualization backups and memory snapshots as credential-bearing assets.
+- Disable NTLM where possible and monitor Pass-the-Hash behavior.
+- Keep domain controllers, management hosts, and backup infrastructure on tightly segmented networks.
 
-## KRB_AP_ERR_TKT_EXPIRED
+## Troubleshooting
+
+### KRB_AP_ERR_TKT_EXPIRED
 
 Cause:
 
@@ -493,9 +480,7 @@ Rubeus.exe tgtdeleg
 
 Export a fresh ticket.
 
----
-
-## KRB_AP_ERR_SKEW
+### KRB_AP_ERR_SKEW
 
 Cause:
 
@@ -510,9 +495,7 @@ sudo timedatectl set-ntp false
 sudo ntpdate -u <DC-IP>
 ```
 
----
-
-## SMB Download Timeouts
+### SMB download timeouts
 
 Error:
 
@@ -535,9 +518,7 @@ reget "Windows Server 2019-Snapshot1.vmem"
 
 Resume the download instead of restarting.
 
----
-
-## Volatility Hashdump Missing
+### Volatility hashdump missing
 
 Cause:
 
@@ -553,10 +534,8 @@ source ~/volatility3/venv/bin/activate
 pip install pycryptodome pycryptodomex yara-python
 ```
 
----
-
-# Final Flag
+## Flags
 
 ```text
-488e049c7777b08ea40703b427d933bf
+root.txt: 488e049c7777b08ea40703b427d933bf
 ```

@@ -334,7 +334,7 @@ ssh -i id_rsa root@10.129.3.129
 
 The actual private key is deliberately omitted from this repository.
 
-## Note about the password dump
+## Technical note — Password dump
 
 The same hidden tool accepts `target=passwords` and returns values for `root`, `analyst`, and `mcp-dev`. The root value appears to be a placeholder rather than a valid SHA-512 crypt hash:
 
@@ -353,18 +353,7 @@ John reports `No password hashes loaded`, so dumping the SSH key is the intended
 5. **Callable hidden functionality:** `ops._admin_dump` is omitted from listings but remains callable.
 6. **Root-sensitive file disclosure:** the hidden tool can return `/root/.ssh/id_rsa`.
 
-## Remediation
-
-- Restrict inspector and debugging tools to trusted interfaces and require authentication.
-- Upgrade vulnerable MCPJam Inspector deployments.
-- Do not expose Jupyter tokens in command-line arguments.
-- Store secrets in protected configuration or a secrets manager.
-- Run internal services with the least privileges they require.
-- Remove credential-dump functionality from production services.
-- Enforce authorization for each tool, including unlisted tools.
-- Prevent application code from reading root-owned SSH material.
-
-## Final attack path
+## Attack chain summary
 
 ```text
 1. Nmap reveals ports 22, 80, and 6274.
@@ -385,4 +374,22 @@ The first shell was only a foothold. Process enumeration exposed a token for a s
 
 ```text
 A low-privileged shell becomes powerful when internal services leak secrets through process arguments, source code, or localhost-only APIs.
+```
+
+## Remediation
+
+- Restrict inspector and debugging tools to trusted interfaces and require authentication.
+- Upgrade vulnerable MCPJam Inspector deployments.
+- Do not expose Jupyter tokens in command-line arguments.
+- Store secrets in protected configuration or a secrets manager.
+- Run internal services with the least privileges they require.
+- Remove credential-dump functionality from production services.
+- Enforce authorization for each tool, including unlisted tools.
+- Prevent application code from reading root-owned SSH material.
+
+## Flags
+
+```text
+user.txt: [REDACTED]
+root.txt: [REDACTED]
 ```

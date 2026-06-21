@@ -2,7 +2,7 @@
 
 > **Active-machine material — private only. Do not publish until Reactor has retired.**
 
-## Overview
+## Machine information
 
 | Field | Value |
 | --- | --- |
@@ -11,6 +11,10 @@
 | Season | 11 |
 | OS | Linux |
 | Difficulty | Medium/Hard |
+
+## Summary
+
+Reactor combines a Next.js React Server Components foothold with local credential recovery and an exposed Node.js debugging interface. React2Shell provides execution as `node`, a cracked application hash enables lateral movement to `engineer`, and the root-owned V8 Inspector turns local debug access into full privilege escalation.
 
 Main techniques:
 
@@ -271,10 +275,18 @@ acd9a307a2ffff33c9d2ab38db54dbbd
 - After compromising Node.js, enumerate Node processes and local debug ports.
 - Never enable `node --inspect` in production, especially on a root-owned process.
 
+## Remediation
+
+- Upgrade Next.js and React Server Components dependencies against known Server Actions vulnerabilities.
+- Do not store passwords as unsalted MD5 hashes; use Argon2id, scrypt, or bcrypt.
+- Restrict access to application databases and remove unnecessary credential material.
+- Bind debugging interfaces only during controlled development sessions.
+- Never run a production process as root with the V8 Inspector enabled.
+- Monitor localhost listeners and process arguments for exposed administrative interfaces.
+
 ## Flags
 
 ```text
 user.txt: 4cc5b831617fa3cde7b4e65fdcf54ac8
 root.txt: acd9a307a2ffff33c9d2ab38db54dbbd
 ```
-
