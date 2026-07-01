@@ -10,7 +10,7 @@
 | Platform | Hack The Box |
 | Season | 11 |
 | OS | Windows Server 2025 |
-| Difficulty | Not specified |
+| Difficulty | Medium |
 | Category | Active Directory / Kerberos / memory forensics |
 | Initial access | Restored Active Directory object and writable deployment share |
 | Privilege escalation | BadSuccessor dMSA abuse, memory forensics, and Pass-the-Hash |

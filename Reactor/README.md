@@ -10,7 +10,7 @@
 | Platform | Hack The Box |
 | Season | 11 |
 | OS | Linux |
-| Difficulty | Medium/Hard |
+| Difficulty | Easy |
 
 ## Summary
 
