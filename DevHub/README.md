@@ -35,6 +35,26 @@ MCPJam Inspector RCE
 → SSH as root
 ```
 
+## Vulnerability used
+
+### CVE-2026-23744 — MCPJam Inspector Remote Code Execution
+
+- **Stage:** Foothold / initial access
+- **Target:** MCPJam Inspector v1.4.2 exposed on port `6274`
+- **Endpoint:** `POST /api/mcp/connect`
+- **Impact in DevHub:** a crafted request against MCPJam Inspector produced the initial reverse shell as `mcp-dev`.
+- **Affected versions:** MCPJam Inspector `<= 1.4.2`
+- **Fixed version:** MCPJam Inspector `1.4.3`
+- **References:**
+  - NVD — <https://nvd.nist.gov/vuln/detail/CVE-2026-23744>
+  - GitHub Security Advisory GHSA-232v-j27c-5pp6 — <https://github.com/advisories/GHSA-232v-j27c-5pp6>
+  - Exploit reference used during the lab: `iamrajkumar1995/MCPJam-Exploit` / `mcpexploit1.py`
+
+No CVE was used for the lateral movement or privilege escalation:
+
+- `mcp-dev` → `analyst`: abused an exposed Jupyter Lab token visible in process arguments.
+- `analyst` → `root`: abused a hardcoded OPSMCP API key and the hidden `ops._admin_dump` tool in `/opt/opsmcp/server.py` to dump `/root/.ssh/id_rsa`.
+
 ## 1. Reconnaissance
 
 Run a full TCP scan:
@@ -65,7 +85,7 @@ Code Repository     → maintenance
 
 Visiting `http://devhub.htb:6274` identifies **MCPJam Inspector v1.4.2**.
 
-## 2. Initial foothold — MCPJam Inspector RCE
+## 2. Initial foothold — CVE-2026-23744 MCPJam Inspector RCE
 
 The service exposes the following endpoint:
 

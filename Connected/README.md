@@ -19,6 +19,25 @@
 
 Connected combines an unauthenticated FreePBX SQL injection with an unsafe root-owned automation chain. The web flaw provides command execution as `asterisk`; writable DAHDI configuration and an Incron trigger then cross the privilege boundary to root.
 
+## CVE and vulnerability used
+
+### CVE-2025-57819 — FreePBX Endpoint Manager SQL injection to RCE
+
+- **Stage:** Foothold / initial access
+- **Target:** FreePBX `16.0.40.7` / Endpoint Manager
+- **Impact in Connected:** unauthenticated SQL injection allowed stacked SQL queries to insert a malicious `cron_jobs` entry. The scheduled job wrote a PHP command endpoint, which led to RCE as the `asterisk` user.
+- **Exploit reference:** `watchTowr-vs-FreePBX-CVE-2025-57819.py`
+- **Description:** FreePBX authentication bypass / SQL injection leading to database manipulation and remote code execution.
+- **Reference:** NVD — <https://nvd.nist.gov/vuln/detail/CVE-2025-57819>
+
+No CVE was used for privilege escalation. Root access came from a local misconfiguration:
+
+- `incrond` ran as root.
+- The monitored trigger file `/var/spool/asterisk/sysadmin/dahdi_restart` was writable by `asterisk`.
+- The triggered script `/usr/sbin/sysadmin_dahdi_restart` restarted DAHDI as root.
+- `/etc/init.d/dahdi` sourced `/etc/dahdi/init.conf`.
+- `/etc/dahdi/init.conf` was writable by `asterisk`, so the injected command executed as root.
+
 ## 1. Reconnaissance
 
 Start with a basic scan:

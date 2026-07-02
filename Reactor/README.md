@@ -19,10 +19,41 @@ Reactor combines a Next.js React Server Components foothold with local credentia
 Main techniques:
 
 - Next.js and React Server Components fingerprinting
-- React2Shell / CVE-2025-66478 exploitation
+- React2Shell / CVE-2025-55182 and CVE-2025-66478 exploitation
 - SQLite database extraction and raw MD5 cracking
 - SSH lateral movement
 - Node.js V8 Inspector abuse for privilege escalation
+
+## CVEs and vulnerabilities used
+
+### CVE-2025-55182 — React2Shell / React Server Components RCE
+
+- **Stage:** Initial access / foothold
+- **Target:** Next.js application on port `3000`
+- **Impact:** Unauthenticated remote code execution through React Server Components / Server Functions.
+- **Why it was relevant:** the application exposed React Server Components behavior through headers such as `Vary: RSC`, returned `Content-Type: text/x-component` when queried with RSC headers, and the client-side chunks contained Server Actions indicators like `Next-Action`, `callServer`, `encodeReply`, `server-action`, and `use server`.
+- **Reference:** NVD — <https://nvd.nist.gov/vuln/detail/CVE-2025-55182>
+
+### CVE-2025-66478 — Next.js RSC remote code execution advisory
+
+- **Stage:** Initial access / foothold
+- **Target:** Next.js / React Server Components implementation
+- **Impact:** Next.js-specific RCE path related to the React Server Components vulnerability.
+- **Usage in Reactor:** a CVE-2025-66478 PoC was used to execute commands on the Next.js application and obtain code execution as the `node` user.
+- **Note:** public reporting treats this as the Next.js advisory around the same RSC issue; some sources now describe it as superseded or duplicated by the upstream React CVE-2025-55182.
+- **Reference:** Next.js advisory — <https://nextjs.org/blog/CVE-2025-66478>
+
+### Node.js Inspector misconfiguration
+
+- **Stage:** Privilege escalation
+- **Target:** root-owned Node.js process:
+
+  ```text
+  /usr/bin/node --inspect=127.0.0.1:9229 /opt/uptime-monitor/worker.js
+  ```
+
+- **Impact:** local privilege escalation to root by abusing the exposed V8 Inspector WebSocket and evaluating JavaScript in the context of a root-owned Node.js process.
+- **Note:** this was not a CVE in the lab. It was a dangerous debug configuration/misconfiguration.
 
 ## 1. Reconnaissance
 
@@ -105,7 +136,7 @@ Next.js detected
 = React Server Components / Server Actions attack surface
 ```
 
-This does not prove RCE, but it makes testing React2Shell / CVE-2025-66478 a justified next step.
+This does not prove RCE, but it makes testing React2Shell / CVE-2025-55182 and the Next.js CVE-2025-66478 advisory path a justified next step.
 
 ## 3. React2Shell confirmation and initial RCE
 
