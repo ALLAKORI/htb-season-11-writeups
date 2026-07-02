@@ -25,6 +25,31 @@ After authenticating to OpenSTAManager, its vulnerable module/update upload func
 
 For privilege escalation, OliveTin is discovered running as `root` on localhost. An SSH tunnel exposes the local web interface, and the `Backup Database` action is vulnerable to command injection through the `db_pass` field. Because OliveTin executes the action as root, the injection creates a SUID bash binary and gives an effective root shell.
 
+## CVEs and vulnerabilities used
+
+### CVE-2025-69212 — OpenSTAManager authenticated OS command injection
+
+- **Stage:** Foothold / RCE as `www-data`
+- **Target:** OpenSTAManager `2.9.8`
+- **Impact in Enigma:** authenticated command execution through OpenSTAManager after obtaining administrator credentials from Sarah's mailbox.
+- **Technical mapping:** OpenSTAManager 2.9.8 and earlier are affected by OS command injection in the P7M signed XML decoding path when a ZIP upload contains a `.p7m` file with a malicious filename.
+- **Reference:** NVD — <https://nvd.nist.gov/vuln/detail/CVE-2025-69212>
+
+### CVE-2026-27626 — OliveTin password argument command injection
+
+- **Stage:** Privilege escalation / root
+- **Target:** OliveTin `3000.10.0` behavior, exposed locally through the root-owned OliveTin service on `127.0.0.1:1337`
+- **Impact in Enigma:** the `Backup Database` action accepted a `db_pass` value that was placed into a shell command. Breaking out of the quoted password argument allowed commands to run as root and create a SUID bash binary.
+- **Reference:** NVD — <https://nvd.nist.gov/vuln/detail/CVE-2026-27626>
+
+### Related OpenSTAManager upload issue — CVE-2026-38751
+
+- **Stage:** Related to the same OpenSTAManager upload/RCE area
+- **Target:** OpenSTAManager `<= 2.10`
+- **Description:** arbitrary file upload in `modules/aggiornamenti/upload_modules.php`.
+- **Usage note:** this is documented as related context for the module/update upload attack surface. The primary CVE mapped to the RCE used in this writeup is CVE-2025-69212.
+- **Reference:** NVD — <https://nvd.nist.gov/vuln/detail/CVE-2026-38751>
+
 ## Complete attack chain
 
 ```text
@@ -54,7 +79,7 @@ For privilege escalation, OliveTin is discovered running as `root` on localhost.
 
 8. The support portal was running OpenSTAManager 2.9.8.
 
-9. OpenSTAManager was exploited through its vulnerable module/update upload functionality,
+9. OpenSTAManager was exploited through its vulnerable upload/RCE path,
    giving remote code execution as www-data.
 
 10. As www-data, the OpenSTAManager configuration file exposed database credentials:
@@ -84,7 +109,7 @@ For privilege escalation, OliveTin is discovered running as `root` on localhost.
 19. The Backup Database action built a shell command using user-controlled input:
     mysqldump -u {{ db_user }} -p'{{ db_pass }}' {{ db_name }} > /opt/backups/backup.sql
 
-20. The db_pass field was vulnerable to command injection.
+20. The db_pass field mapped to CVE-2026-27626-style command injection.
 
 21. The quote was escaped and a SUID bash was created:
     '; mkdir -p /opt/backups; cp /bin/bash /tmp/rootbash; chmod 4755 /tmp/rootbash; #
@@ -321,9 +346,9 @@ OpenSTAManager 2.9.8
 
 With administrator access, the module/update functionality becomes the next target.
 
-## 6. OpenSTAManager RCE
+## 6. OpenSTAManager RCE — CVE-2025-69212
 
-OpenSTAManager is exploited through its vulnerable module/update upload workflow:
+OpenSTAManager is exploited through its vulnerable upload/RCE workflow. In this writeup, the issue is tracked as **CVE-2025-69212**, an authenticated OpenSTAManager command injection affecting version `2.9.8` and earlier.
 
 ```text
 Login as admin
@@ -693,9 +718,9 @@ Arguments:
 
 The issue is that `db_pass` is inserted directly into a shell command.
 
-## 15. Command injection in db_pass
+## 15. Command injection in db_pass — CVE-2026-27626
 
-The command template is:
+The command template maps to **CVE-2026-27626** behavior: a password-style argument reaches a shell command without sufficient metacharacter handling. The vulnerable command template is:
 
 ```bash
 mysqldump -u {{ db_user }} -p'{{ db_pass }}' {{ db_name }} > /opt/backups/backup.sql
