@@ -31,7 +31,7 @@ For privilege escalation, OliveTin is discovered running as `root` on localhost.
 
 - **Stage:** Foothold / RCE as `www-data`
 - **Target:** OpenSTAManager `2.9.8`
-- **Impact in Enigma:** authenticated command execution through OpenSTAManager after obtaining administrator credentials from Sarah's mailbox.
+- **Impact in Enigma:** related OpenSTAManager authenticated command-execution context after obtaining administrator credentials from Sarah's mailbox.
 - **Technical mapping:** OpenSTAManager 2.9.8 and earlier are affected by OS command injection in the P7M signed XML decoding path when a ZIP upload contains a `.p7m` file with a malicious filename.
 - **Reference:** NVD — <https://nvd.nist.gov/vuln/detail/CVE-2025-69212>
 
@@ -44,10 +44,17 @@ For privilege escalation, OliveTin is discovered running as `root` on localhost.
 
 ### Related OpenSTAManager upload issue — CVE-2026-38751
 
-- **Stage:** Related to the same OpenSTAManager upload/RCE area
+- **Stage:** Foothold / RCE as `www-data`
 - **Target:** OpenSTAManager `<= 2.10`
 - **Description:** arbitrary file upload in `modules/aggiornamenti/upload_modules.php`.
-- **Usage note:** this is documented as related context for the module/update upload attack surface. The primary CVE mapped to the RCE used in this writeup is CVE-2025-69212.
+- **Usage in Enigma:** this was the PoC path used during the lab. The exploit uploaded a malicious module ZIP, placed a PHP webshell under `/modules/shell/shell.php`, verified command execution, and then triggered a reverse shell as `www-data`.
+- **Exploit reference used:** <https://github.com/b0ySie7e/OpenSTAManager-RCE-Exploit-CVE-2026-38751>
+- **Clone command:**
+
+  ```bash
+  git clone https://github.com/b0ySie7e/OpenSTAManager-RCE-Exploit-CVE-2026-38751.git
+  ```
+
 - **Reference:** NVD — <https://nvd.nist.gov/vuln/detail/CVE-2026-38751>
 
 ## Complete attack chain
@@ -346,9 +353,18 @@ OpenSTAManager 2.9.8
 
 With administrator access, the module/update functionality becomes the next target.
 
-## 6. OpenSTAManager RCE — CVE-2025-69212
+## 6. OpenSTAManager RCE — CVE-2026-38751 PoC
 
-OpenSTAManager is exploited through its vulnerable upload/RCE workflow. In this writeup, the issue is tracked as **CVE-2025-69212**, an authenticated OpenSTAManager command injection affecting version `2.9.8` and earlier.
+OpenSTAManager is exploited through its vulnerable module/update upload workflow. In this lab, the exploit used was:
+
+```bash
+git clone https://github.com/b0ySie7e/OpenSTAManager-RCE-Exploit-CVE-2026-38751.git
+cd OpenSTAManager-RCE-Exploit-CVE-2026-38751
+```
+
+The repository provides a PoC for **CVE-2026-38751**, an authenticated OpenSTAManager arbitrary file upload leading to RCE. It automates login, malicious module ZIP creation, upload, webshell verification, reverse shell payload delivery, and cleanup.
+
+Related OpenSTAManager context: CVE-2025-69212 also affects OpenSTAManager 2.9.8 and earlier through an authenticated command-injection path, but the exploit actually used in this run was the `b0ySie7e/OpenSTAManager-RCE-Exploit-CVE-2026-38751` module-upload PoC.
 
 ```text
 Login as admin
