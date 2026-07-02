@@ -22,7 +22,7 @@ Private technical notes for Hack The Box Season 11 machines solved by Kossi Rich
 | DevHub | CVE-2026-23744 MCPJam Inspector RCE; exposed Jupyter token; hardcoded OPSMCP API key and hidden `ops._admin_dump` tool | Initial access; lateral movement; root privilege escalation |
 | Connected | CVE-2025-57819 FreePBX Endpoint Manager SQL injection to RCE; root-owned Incron / writable DAHDI config misconfiguration | Initial access; root privilege escalation |
 | Checkpoint | Active Directory object recovery, ACL abuse, dMSA / BadSuccessor abuse, memory forensics, Pass-the-Hash | Initial access; privilege escalation |
-| Enigma | CVE-2025-69212 OpenSTAManager command injection; CVE-2026-27626 OliveTin password argument command injection; related CVE-2026-38751 OpenSTAManager upload issue | Foothold; root privilege escalation |
+| Enigma | CVE-2026-38751 OpenSTAManager module-upload RCE PoC; related CVE-2025-69212 OpenSTAManager command-injection context; CVE-2026-27626 OliveTin password argument command injection | Foothold; root privilege escalation |
 
 ## Writeup standard
 
