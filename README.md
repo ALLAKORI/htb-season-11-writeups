@@ -14,6 +14,7 @@ Private technical notes for Hack The Box Season 11 machines solved by Kossi Rich
 | Checkpoint | Windows | Medium | Active — private only | [Read](Checkpoint/README.md) |
 | Enigma | Linux | Easy | Active — private only | [Read](Enigma/README.md) |
 | Paperwork | Linux | Easy | Active — private only | [Read](Paperwork/README.md) |
+| MakeSense | Linux | Medium | Active — private only | [Read](MakeSense/README.md) |
 
 ## Vulnerability index
 
@@ -25,6 +26,7 @@ Private technical notes for Hack The Box Season 11 machines solved by Kossi Rich
 | Checkpoint | Active Directory object recovery, ACL abuse, dMSA / BadSuccessor abuse, memory forensics, Pass-the-Hash | Initial access; privilege escalation |
 | Enigma | CVE-2026-38751 OpenSTAManager module-upload RCE PoC; related CVE-2025-69212 OpenSTAManager command-injection context; CVE-2026-27626 OliveTin password argument command injection | Foothold; root privilege escalation |
 | Paperwork | LPD command injection; PJL path traversal and arbitrary file write; `SCM_RIGHTS` file descriptor leak; password reuse | Initial access; user escalation; root privilege escalation |
+| MakeSense | Hardcoded client-side encryption key; stored XSS; WordPress administrator account creation; PHP reverse shell; credential reuse; internal OCR-to-PHP root RCE | Initial access; lateral movement; root privilege escalation |
 
 ## Writeup standard
 
