@@ -15,6 +15,7 @@ Private technical notes for Hack The Box Season 11 machines solved by Kossi Rich
 | Enigma | Linux | Easy | Active — private only | [Read](Enigma/README.md) |
 | Paperwork | Linux | Easy | Active — private only | [Read](Paperwork/README.md) |
 | MakeSense | Linux | Medium | Active — private only | [Read](MakeSense/README.md) |
+| Bedside | Linux | Medium | Active — private only | [Read](Bedside/README.md) |
 
 ## Vulnerability index
 
@@ -27,6 +28,7 @@ Private technical notes for Hack The Box Season 11 machines solved by Kossi Rich
 | Enigma | CVE-2026-38751 OpenSTAManager module-upload RCE PoC; related CVE-2025-69212 OpenSTAManager command-injection context; CVE-2026-27626 OliveTin password argument command injection | Foothold; root privilege escalation |
 | Paperwork | LPD command injection; PJL path traversal and arbitrary file write; `SCM_RIGHTS` file descriptor leak; password reuse | Initial access; user escalation; root privilege escalation |
 | MakeSense | Hardcoded client-side encryption key; stored XSS; WordPress administrator account creation; PHP reverse shell; credential reuse; internal OCR-to-PHP root RCE | Initial access; lateral movement; root privilege escalation |
+| Bedside | CVE-2025-64512 pdfminer.six pickle deserialization RCE; internal development-server path traversal; PyTorch checkpoint deserialization through `torch.load()`; shared datastore permission boundary failure | Initial access; container-to-host pivot; root privilege escalation |
 
 ## Writeup standard
 
