@@ -17,6 +17,7 @@ Private technical notes for Hack The Box Season 11 machines solved by Kossi Rich
 | MakeSense | Linux | Medium | Active — private only | [Read](MakeSense/README.md) |
 | Bedside | Linux | Medium | Active — private only | [Read](Bedside/README.md) |
 | DarkZeroReturns | Windows / AD | Hard | Active — private only | [Read](DarkZeroReturns/README.md) |
+| Cohort | Linux | Easy | Active — private only | [Read](Cohort/README.md) |
 
 ## Vulnerability index
 
@@ -31,6 +32,7 @@ Private technical notes for Hack The Box Season 11 machines solved by Kossi Rich
 | MakeSense | Hardcoded client-side encryption key; stored XSS; WordPress administrator account creation; PHP reverse shell; credential reuse; internal OCR-to-PHP root RCE | Initial access; lateral movement; root privilege escalation |
 | Bedside | CVE-2025-64512 pdfminer.six pickle deserialization RCE; internal development-server path traversal; PyTorch checkpoint deserialization through `torch.load()`; shared datastore permission boundary failure | Initial access; container-to-host pivot; root privilege escalation |
 | DarkZeroReturns | CVE-2026-33937 Handlebars AST injection RCE; related CVE-2021-23369 Handlebars RCE context; Gitea Actions workflow trust abuse; Kerberos/AD ACL abuse; forest-trust ExtraSID and DCSync chain | Initial access; lateral movement; Linux root; domain and cross-forest compromise |
+| Cohort | CVE-2026-39987 Marimo pre-auth Terminal WebSocket RCE; SSRF loopback bypass through `127.1`; nginx/vhost pivot to Marimo; CVE-2026-41651 PackageKit TOCTOU / Pack2TheRoot | Initial access; root privilege escalation |
 
 ## Writeup standard
 
