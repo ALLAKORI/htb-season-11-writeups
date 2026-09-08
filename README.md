@@ -19,6 +19,7 @@ Private technical notes for Hack The Box Season 11 machines solved by Kossi Rich
 | DarkZeroReturns | Windows / AD | Hard | Active — private only | [Read](DarkZeroReturns/README.md) |
 | Cohort | Linux | Easy | Active — private only | [Read](Cohort/README.md) |
 | DanglingTree | Windows / AD | Medium | Active — private only | [Read](DanglingTree/README.md) |
+| BlockSynergy | Linux | Medium | Active — private only | [Read](BlockSynergy/README.md) |
 
 ## Vulnerability index
 
@@ -35,6 +36,7 @@ Private technical notes for Hack The Box Season 11 machines solved by Kossi Rich
 | DarkZeroReturns | CVE-2026-33937 Handlebars AST injection RCE; related CVE-2021-23369 Handlebars RCE context; Gitea Actions workflow trust abuse; Kerberos/AD ACL abuse; forest-trust ExtraSID and DCSync chain | Initial access; lateral movement; Linux root; domain and cross-forest compromise |
 | Cohort | CVE-2026-39987 Marimo pre-auth Terminal WebSocket RCE; SSRF loopback bypass through `127.1`; nginx/vhost pivot to Marimo; CVE-2026-41651 PackageKit TOCTOU / Pack2TheRoot | Initial access; root privilege escalation |
 | DanglingTree | CVE-2026-23760 SmarterMail password reset authentication bypass; CVE-2026-24423 SmarterMail ConnectToHub RCE; Windows Admin Center pivoting; SmarterMail backup recovery; DPAPI credential decryption; ForceChangePassword ACL abuse; AD CS ESC1 certificate impersonation | Initial access; lateral movement; domain compromise |
+| BlockSynergy | Transaction forgery (no sender validation); SSRF via `0.0.0.0` bypass; blind command injection via URL userinfo; path traversal in `log_file`; TOCTOU race on restore daemon | Initial access; user escalation; root privilege escalation |
 
 ## Writeup standard
 
