@@ -2,7 +2,7 @@
 
 ![Platform](https://img.shields.io/badge/Platform-Hack%20The%20Box-brightgreen)
 ![OS](https://img.shields.io/badge/OS-Linux-blue)
-![Difficulty](https://img.shields.io/badge/Difficulty-Medium-orange)
+![Difficulty](https://img.shields.io/badge/Difficulty-Insane-red)
 ![Category](https://img.shields.io/badge/Category-Web%20%2F%20SSRF%20%2F%20RCE%20%2F%20Linux%20LPE-purple)
 
 > **Active machine / private write-up.**
@@ -15,7 +15,7 @@
 | Machine | BlockSynergy |
 | Platform | Hack The Box |
 | OS | Linux |
-| Difficulty | Medium |
+| Difficulty | Insane |
 | Category | Web / SSRF / Command Injection / Path Traversal / TOCTOU |
 | Initial Foothold | SSRF bypass via `0.0.0.0` + command injection via URL userinfo |
 | Privilege Escalation | Path traversal in dev server + TOCTOU race on restore daemon |

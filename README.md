@@ -19,7 +19,7 @@ Private technical notes for Hack The Box Season 11 machines solved by Kossi Rich
 | DarkZeroReturns | Windows / AD | Hard | Active — private only | [Read](DarkZeroReturns/README.md) |
 | Cohort | Linux | Easy | Active — private only | [Read](Cohort/README.md) |
 | DanglingTree | Windows / AD | Medium | Active — private only | [Read](DanglingTree/README.md) |
-| BlockSynergy | Linux | Medium | Active — private only | [Read](BlockSynergy/README.md) |
+| BlockSynergy | Linux | Insane | Active — private only | [Read](BlockSynergy/README.md) |
 
 ## Vulnerability index
 
